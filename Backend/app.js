@@ -1,15 +1,24 @@
 const dotenv = require('dotenv')
 dotenv.config();
-const express= require('express');
+const express = require('express');
 const cors = require('cors');
+const connectToDB = require('./db/db')
+const userRoutes = require('./routes/user.routes')
+const cookie = require('cookie-parser');
+
 const app = express();
 
+connectToDB();
 
 app.use(cors());
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookie());
 
 app.get("/", (req, res) => {
     res.send("HELLO WORLD");
 })
+
+app.use('/users', userRoutes);
 
 module.exports = app;
