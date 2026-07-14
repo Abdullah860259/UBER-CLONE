@@ -1,7 +1,14 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
+import axios from "axios"
+import { toast } from "sonner"
+import { useDispatch } from "react-redux"
+import { setUser } from "../redux/user/user"
 
 const UserRegister = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const [input, setInput] = useState({
         fullname: {
             "firstname": "",
@@ -13,15 +20,32 @@ const UserRegister = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(input)
-        setInput({
-            fullname: {
-                "firstname": "",
-                "lastname": ""
-            },
-            email: "",
-            password: ""
-        });
+
+        if (!input.fullname.firstname || !input.fullname.lastname || !input.email || !input.password) {
+            toast.error("Please fill in all fields");
+            return;
+        }
+
+        axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, input)
+            .then((res) => {
+                toast.success("User registered successfully");
+                navigate("/user-login");
+                setInput({
+                    fullname: {
+                        "firstname": "",
+                        "lastname": ""
+                    },
+                    email: "",
+                    password: ""
+                });
+                dispatch(setUser(res.data));
+            })
+            .catch((err) => {
+                console.log(err.response);
+                if (err.response.data.message || err.response.data.errors) {
+                    toast.error(err.response.data.message || err.response.data.errors[0].msg);
+                }
+            });
     };
 
     return (

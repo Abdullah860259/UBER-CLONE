@@ -5,6 +5,7 @@ import CaptainLogin from './Pages/CaptainLogin'
 import UserRegister from './Pages/UserRegister'
 import CaptainRegister from './Pages/CaptainRegister'
 
+
 const App = () => {
   return (
     <Routes>
