@@ -1,5 +1,5 @@
 const dotenv = require('dotenv')
-dotenv.config();
+dotenv.config({path: ['./.env.local']});
 const express = require('express');
 const cors = require('cors');
 const connectToDB = require('./db/db')
@@ -16,8 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookie());
 
-app.get("/", (req, res) => {
-    res.send("HELLO WORLD");
+app.get("/health", (req, res) => {
+    res.send("The server is running fine");
 })
 
 app.use('/users', userRoutes);
