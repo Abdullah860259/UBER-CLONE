@@ -25,11 +25,11 @@ const UserRegister = () => {
             toast.error("Please fill in all fields");
             return;
         }
-
+        console.log(input)
         axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, input)
             .then((res) => {
                 toast.success("User registered successfully");
-                navigate("/user-login");
+                navigate("/dashboard");
                 setInput({
                     fullname: {
                         "firstname": "",
@@ -38,13 +38,19 @@ const UserRegister = () => {
                     email: "",
                     password: ""
                 });
-                dispatch(setUser(res.data));
+                dispatch(setUser({
+                    user: res.data.user,
+                    token: res.data.token,
+                    isLoggedIn: true
+                }));
             })
             .catch((err) => {
-                console.log(err.response);
-                if (err.response.data.message || err.response.data.errors) {
-                    toast.error(err.response.data.message || err.response.data.errors[0].msg);
-                }
+                toast.error(
+                    err.response?.data?.errors?.[0]?.msg ||
+                    err.response?.data?.message ||
+                    "Something went wrong"
+                );
+                setInput({ ...input, password: "" });
             });
     };
 
@@ -66,14 +72,14 @@ const UserRegister = () => {
                                 type="text"
                                 placeholder="uber@"
                                 value={input.fullname.firstname}
-                                onChange={(e) => setInput({ ...input, fullname: { "firstname": e.target.value, "lastname": input.fullname.lastname } })}
+                                onChange={(e) => setInput({ ...input, fullname: { ...input.fullname, firstname: e.target.value } })}
                                 className="border w-1/2 border-gray-300 rounded-lg py-4 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             <input
                                 type="text"
                                 placeholder="uber@example.com"
                                 value={input.fullname.lastname}
-                                onChange={(e) => setInput({ ...input, fullname: { "firstname": input.fullname.firstname, "lastname": e.target.value } })}
+                                onChange={(e) => setInput({ ...input, fullname: { ...input.fullname, lastname: e.target.value } })}
                                 className="border w-1/2 border-gray-300 rounded-lg py-4 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>

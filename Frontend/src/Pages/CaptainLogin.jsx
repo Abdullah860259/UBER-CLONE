@@ -1,7 +1,15 @@
+import axios from "axios";
 import { useState } from "react"
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/user/user"
 import { Link } from "react-router-dom"
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const CaptainLogin = () => {
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [input, setInput] = useState({
         email: "",
@@ -10,10 +18,30 @@ const CaptainLogin = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setInput({
-            email: "",
-            password: ""
-        });
+        if (!input.password || !input.email) {
+            toast.error("Fill all fields")
+            return;
+        }
+        axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, input)
+            .then((res) => {
+                setInput({
+                    email: "",
+                    password: ""
+                })
+                dispatch(setUser({
+                    user: res.data.user,
+                    token: res.data.token,
+                    isLoggedIn: true
+                }))
+                navigate("/dashboard");
+            })
+            .catch((err) => {
+                toast.error(
+                    err.response.data?.message ||
+                    err.response?.data?.errors?.[0]?.msg ||
+                    "User login failed, please try again later."
+                );
+            })
     };
 
     return (

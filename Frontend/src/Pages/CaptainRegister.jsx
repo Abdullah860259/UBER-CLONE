@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { setUser } from '../redux/user/user'
+import { useNavigate } from "react-router-dom";
 
 const CaptainRegister = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [input, setInput] = useState({
         fullname: {
@@ -9,20 +16,53 @@ const CaptainRegister = () => {
             "lastname": ""
         },
         email: "",
-        password: ""
+        password: "",
+        vehicle: {
+            color: "",
+            plate: "",
+            capacity: "",
+            vehicleType: ""
+        }
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(input)
-        setInput({
-            fullname: {
-                "firstname": "",
-                "lastname": ""
-            },
-            email: "",
-            password: ""
-        });
+        if (!input.fullname.firstname || !input.email || !input.password || !input.fullname.lastname || !input.vehicle.color || !input.vehicle.plate || !input.vehicle.capacity || !input.vehicle.vehicleType) {
+            toast.error("Fill all the fields");
+            return;
+        }
+        axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, input)
+            .then((res) => {
+                toast.success("Captain created successfully");
+                setInput({
+                    fullname: {
+                        "firstname": "",
+                        "lastname": ""
+                    },
+                    email: "",
+                    password: "",
+                    vehicle: {
+                        color: "",
+                        plate: "",
+                        capacity: "",
+                        vehicleType: ""
+                    }
+                });
+                dispatch(setUser({
+                    user: res.data.user,
+                    token: res.data.token,
+                    isLoggedIn: true
+                }))
+                navigate("/dashboard");
+            })
+            .catch((err) => {
+                toast.error(
+                    err.response?.data?.errors?.[0]?.msg ||
+                    err.response?.data?.message ||
+                    "Something went wrong"
+                );
+                setInput({ ...input, password: "" });
+            })
     };
 
     return (
@@ -30,7 +70,7 @@ const CaptainRegister = () => {
             <div>
                 <img
                     className="w-28 h-auto mt-6 mb-10 "
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Uber_logo_2018.svg/960px-Uber_logo_2018.svg.png"
+                    src="https://www.svgrepo.com/show/505031/uber-driver.svg"
                     alt="logo"
                 />
                 <form
@@ -70,6 +110,40 @@ const CaptainRegister = () => {
                             onChange={(e) => setInput({ ...input, password: e.target.value })}
                             className="border border-gray-300 rounded-lg py-4 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
+                        <h3 className="text-2xl font-semibold " >Vehicle</h3>
+                        <div className="grid grid-cols-2 gap-2 overflow-hidden" >
+                            <input
+                                type="text"
+                                placeholder="Color"
+                                value={input.vehicle.color}
+                                onChange={(e) => setInput({ ...input, vehicle: { ...input.vehicle, color: e.target.value } })}
+                                className="border w-full border-gray-300 rounded-lg py-4 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Number Plate"
+                                value={input.vehicle.plate}
+                                onChange={(e) => setInput({ ...input, vehicle: { ...input.vehicle, plate: e.target.value } })}
+                                className="border w-full border-gray-300 rounded-lg py-4 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="number"
+                                placeholder="Capacity"
+                                value={input.vehicle.capacity}
+                                onChange={(e) => setInput({ ...input, vehicle: { ...input.vehicle, capacity: e.target.value } })}
+                                className="border w-full border-gray-300 rounded-lg py-4 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <select
+                                value={input.vehicle.vehicleType}
+                                onChange={(e) => setInput({ ...input, vehicle: { ...input.vehicle, vehicleType: e.target.value } })}
+                                className="border w-full border-gray-300 rounded-lg py-4 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="">Vehicle Type</option>
+                                <option value="car">Car</option>
+                                <option value="auto">Auto</option>
+                                <option value="bike">Bike</option>
+                            </select>
+                        </div>
                         <button
                             type="submit"
                             className="bg-black text-white my-4 py-3 px-4 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"

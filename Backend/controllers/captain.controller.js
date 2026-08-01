@@ -9,7 +9,7 @@ module.exports.registerCaptain = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fullname, email, password, vehicle } = req.body;
+    const { fullname, email, password ,vehicle} = req.body;
 
     const existingCaptain = await captainModel.findOne({ email });
     if (existingCaptain) {
@@ -22,7 +22,7 @@ module.exports.registerCaptain = async (req, res) => {
         fullname,
         email,
         password: hashedPassword,
-        vehicle
+        vehicle: vehicle
     });
 
     const token = await newCaptain.generateAuthToken();

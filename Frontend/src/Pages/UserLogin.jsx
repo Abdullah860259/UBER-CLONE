@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/user/user";
 
 const UserLogin = () => {
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [input, setInput] = useState({
     email: "",
     password: ""
@@ -10,10 +15,31 @@ const UserLogin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setInput({
-      email: "",
-      password: ""
-    });
+    if (!input.email || !input.password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+    axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, input)
+      .then((res) => {
+        toast.success("User logged in successfully");
+        setInput({
+          email: "",
+          password: ""
+        });
+        dispatch(setUser({
+          user: res.data.user,
+          token: res.data.token,
+          isLoggedIn: true
+        }));
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        toast.error(
+          err.response.data?.message ||
+          err.response?.data?.errors?.[0]?.msg ||
+          "User login failed, please try again later."
+        );
+      });
   };
 
   return (
