@@ -22,5 +22,7 @@ router.post("/login", [
 
 router.get("/profile", authCaptainMiddleware.authCaptain, captainController.getCaptainProfile);
 router.get("/logout", authCaptainMiddleware.authCaptain, captainController.logoutCaptain);
-
+router.get('/authenticate', authCaptainMiddleware.authCaptain, (req, res) => {
+    res.status(200).json({ message: "User is authenticated", user: req.captain });
+})
 module.exports = router;

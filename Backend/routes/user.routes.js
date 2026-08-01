@@ -16,5 +16,8 @@ router.post('/login', [
 
 router.get('/profile', authMiddleware.authUser, userController.profile)
 router.get('/logout', authMiddleware.authUser, userController.logoutUser)
+router.get('/authenticate', authMiddleware.authUser, (req, res) => {
+    res.status(200).json({ message: "User is authenticated", user: req.user });
+})
 
 module.exports = router;
