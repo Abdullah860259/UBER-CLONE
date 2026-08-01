@@ -5,6 +5,8 @@ import CaptainLogin from './Pages/CaptainLogin'
 import UserRegister from './Pages/UserRegister'
 import CaptainRegister from './Pages/CaptainRegister'
 import DashBoard from './Pages/DashBoard'
+import ProtectedRoute from './components/ProtectedRoute'
+
 
 const App = () => {
   return (
@@ -14,7 +16,7 @@ const App = () => {
       <Route path="/user-register" element={<UserRegister />} />
       <Route path="/captain-login" element={<CaptainLogin />} />
       <Route path="/captain-register" element={<CaptainRegister />} />
-      <Route path="/dashboard" element={<DashBoard />} />
+      <Route path="/dashboard" element={ <ProtectedRoute><DashBoard /></ProtectedRoute> } />
     </Routes>
   )
 }
