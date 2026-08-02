@@ -5,42 +5,44 @@ const blackListTokens = require("../modals/blacklisted");
 const sendOTPEmail = require("../services/otp.services").sendOTPEmail;
 
 module.exports.registerCaptain = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { fullname, email, password, vehicle } = req.body;
+
+        const existingCaptain = await captainModel.findOne({ email });
+        if (existingCaptain && existingCaptain.isVerified) {
+            return res.status(400).json({ message: "Captain with this email already exists" });
+        }
+        if (existingCaptain && !existingCaptain.isVerified) {
+            await captainModel.deleteOne({ email }); // Delete the unverified captain to allow re-registration
+        }
+        const hashedPassword = await captainModel.hashedPassword(password);
+
+        const newCaptain = await captainService.createCaptain({
+            fullname,
+            email,
+            password: hashedPassword,
+            vehicle: vehicle
+        });
+
+        const token = await newCaptain.generateAuthToken();
+        delete newCaptain.password; // Remove password from the response
+        delete newCaptain.__v; // Remove __v from the response
+
+        sendOTPEmail(email, newCaptain); // Send OTP email to the captain
+ 
+        res.status(201).json({
+            token,
+            captain: newCaptain
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
     }
-
-    const { fullname, email, password, vehicle } = req.body;
-
-    const existingCaptain = await captainModel.findOne({ email });
-    if (existingCaptain) {
-        return res.status(400).json({ message: "Captain with this email already exists" });
-    }
-
-    const hashedPassword = await captainModel.hashedPassword(password);
-
-    const newCaptain = await captainService.createCaptain({
-        fullname,
-        email,
-        password: hashedPassword,
-        vehicle: vehicle
-    });
-
-    const token = await newCaptain.generateAuthToken();
-    const otp = await sendOTPEmail(email); // Send OTP email
-    newCaptain.otp = otp.otp; // Store the OTP in the captain document
-    newCaptain.expiry = otp.expiry; // Store the expiry time in the captain document
-    await newCaptain.save(); // Save the captain document with OTP and expiry
-
-    delete newCaptain.password; // Remove password from the response
-    delete newCaptain.otp; // Remove OTP from the response
-    delete newCaptain.expiry; // Remove expiry from the response
-    delete newCaptain.__v; // Remove __v from the response
-    delete newCaptain.isVerified; // Remove createdAt from the response
-    res.status(201).json({
-        token,
-        captain: newCaptain
-    });
 }
 
 module.exports.loginCaptain = async (req, res) => {
