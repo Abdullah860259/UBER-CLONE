@@ -13,18 +13,10 @@ module.exports.getTransporter = () => {
             },
         });
     }
-
+    transporter.verify().then(() => {
+        console.log("Server is ready to take our messages");
+    }).catch((error) => {
+        console.error("Error verifying transporter:", error);
+    });
     return transporter;
 }
-
-module.exports.verifyTransporter = () => {
-    transporter.verify((error, success) => {
-        if (error) {
-            console.log("Error:", error);
-            return false;
-        } else {
-            console.log("Server is ready");
-            return true;
-        }
-    });
-};
