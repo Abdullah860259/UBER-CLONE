@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 let transporter;
-
+// require('dotenv').config();
 
 module.exports.getTransporter = () => {
     if (!transporter) {

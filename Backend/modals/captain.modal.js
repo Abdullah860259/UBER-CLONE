@@ -27,6 +27,18 @@ const captainSchema = mongoose.Schema({
         required: true,
         select: false
     },
+    otp: {
+        type: String,
+        default: null
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    expiry: {
+        type: Date,
+        default: null
+    },
     sockedId: {
         type: String,
     },
