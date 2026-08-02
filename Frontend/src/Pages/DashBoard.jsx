@@ -2,11 +2,13 @@ import { useState } from "react"
 import Search from "../components/Search"
 import Rides from "../components/Rides"
 import RidesDescription from "../components/RidesDescription"
+import ConfirmRide from "../components/ConfirmRide"
 
 const DashBoard = () => {
   const [showPannel, setShowPannel] = useState(false);
   const [showRides, setShowRides] = useState(false);
   const [showRidesDescription, setShowRidesDescription] = useState(false);
+  const [showConfirmRide, setShowConfirmRide] = useState(false);
 
   return (
     <div className="w-screen h-screen relative flex flex-col overflow-hidden items-center justify-center border border-black">
@@ -20,7 +22,8 @@ const DashBoard = () => {
       <div className="bg-[url('/Images/homebackground.jpg')] h-screen w-screen bg-center bg-cover bg-no-repeat" ></div>
       <Search showPannel={showPannel} setShowPannel={setShowPannel} setShowRides={setShowRides} />
       <Rides showRides={showRides} setShowRides={setShowRides} setShowRidesDescription={setShowRidesDescription} />
-      <RidesDescription setShowRidesDescription={setShowRidesDescription} showRidesDescription={showRidesDescription} />
+      <RidesDescription setShowRidesDescription={setShowRidesDescription} showRidesDescription={showRidesDescription} setShowConfirmRide={setShowConfirmRide} />
+      <ConfirmRide showConfirmRide={showConfirmRide} setShowConfirmRide={setShowConfirmRide} />
     </div>
   )
 }

@@ -3,25 +3,25 @@ import { IoLocationSharp } from "react-icons/io5";
 import { FaSquare } from "react-icons/fa";
 import { IoCard } from "react-icons/io5";
 
-const RidesDescription = ({ setShowRidesDescription, showRidesDescription, setShowConfirmRide }) => {
+const RidesDescription = ({ showConfirmRide, setShowConfirmRide }) => {
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (!event.target.closest('.rides-container')) {
-                setShowRidesDescription(false);
+                setShowConfirmRide(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [setShowRidesDescription]);
+    }, [setShowConfirmRide]);
 
     return (
-        <div className={`absolute ${showRidesDescription ? '' : 'translate-y-full'} rides-container transition-transform duration-500 ease-in-out bottom-0 w-full max-h-[70vh] bg-white flex flex-col pt-3 p-3 rounded-t-lg `} >
+        <div className={`absolute ${showConfirmRide ? '' : 'translate-y-full'} rides-container transition-transform duration-500 ease-in-out bottom-0 w-full max-h-[65vh] bg-white flex flex-col pt-3 p-3 rounded-t-lg `} >
             <div className='min-w-16 h-[5px] bg-gray-200 rounded-full absolute top-[6px] left-1/2 -translate-x-1/2' ></div>
             <div className='flex flex-col gap-2' >
                 <h3 className='font-bold w-full text-center text-base' >
-                    Looking for nearby drivers
+                    Waiting for driver confirmation
                 </h3>
                 <div className='w-full  h-[3px] bg-blue-500' ></div>
             </div>
@@ -49,14 +49,6 @@ const RidesDescription = ({ setShowRidesDescription, showRidesDescription, setSh
                         <p className='text-xs font-semibold text-zinc-600' >Lorem ipsum dolor sit amet.</p>
                     </div>
                 </div>
-                <button
-                    className='bg-blue-500 w-full mt-2 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-300'
-                    onClick={() => {
-                        setShowRidesDescription(false);
-                        setShowConfirmRide(true);
-                    }}>
-                    Request Ride
-                </button>
             </div>
         </div>
     )
