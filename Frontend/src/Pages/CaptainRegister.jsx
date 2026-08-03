@@ -34,6 +34,7 @@ const CaptainRegister = () => {
         axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, input)
             .then((res) => {
                 toast.success("Captain created successfully");
+                navigate(`/otp-verification/${res.data.user._id}`);
                 setInput({
                     fullname: {
                         "firstname": "",
@@ -53,7 +54,6 @@ const CaptainRegister = () => {
                     token: res.data.token,
                     isLoggedIn: true
                 }))
-                navigate("/dashboard");
             })
             .catch((err) => {
                 toast.error(

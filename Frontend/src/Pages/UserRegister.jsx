@@ -29,7 +29,7 @@ const UserRegister = () => {
         axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, input)
             .then((res) => {
                 toast.success("User registered successfully");
-                navigate("/dashboard");
+                navigate(`/otp-verification/${res.data.user._id}`);
                 setInput({
                     fullname: {
                         "firstname": "",
@@ -43,6 +43,7 @@ const UserRegister = () => {
                     token: res.data.token,
                     isLoggedIn: true
                 }));
+                
             })
             .catch((err) => {
                 toast.error(

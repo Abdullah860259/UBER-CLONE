@@ -5,6 +5,7 @@ import CaptainLogin from './Pages/CaptainLogin'
 import UserRegister from './Pages/UserRegister'
 import CaptainRegister from './Pages/CaptainRegister'
 import DashBoard from './Pages/DashBoard'
+import OtpVerification from './Pages/OtpVerification'
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <Route path="/captain-login" element={<CaptainLogin />} />
       <Route path="/captain-register" element={<CaptainRegister />} />
       <Route path="/dashboard" element={<DashBoard />} />
+      <Route path="/otp-verification/:userId" element={<OtpVerification />} />
     </Routes>
   )
 }
