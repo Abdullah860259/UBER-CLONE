@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator')
 const userService = require('../services/user.services')
 const blackListTokenModal = require('../modals/blacklisted')
 const sendOTPEmail = require('../services/otp.services').sendOTPEmail;
+const verifyOtp = require('../utils/VerifyEmail').verifyOtp;
 
 module.exports.registerUser = (async (req, res, next) => {
     try {
@@ -80,4 +81,18 @@ module.exports.logoutUser = async (req, res, next) => {
     const token = req.cookies.token || req.headers.authorization.split(' ')[1];
     const blacklistedToken = await blackListTokenModal.create({ token: token });
     res.status(200).json({ message: "logout successfully" });
+}
+
+module.exports.verifyOtp = async (req, res, next) => {
+    try {
+        const user = req.user;
+        const { otp } = req.params;
+
+        await verifyOtp(user, otp);
+
+        res.status(200).json({ message: "OTP verified successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }

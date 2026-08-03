@@ -17,4 +17,8 @@ router.post('/login', [
 router.get('/profile', authMiddleware.authUser, userController.profile)
 router.get('/logout', authMiddleware.authUser, userController.logoutUser)
 
+router.get('/verify-otp/:otp', [
+    body('otp').isLength({ min: 6 }).withMessage("Invalid OTP")
+], authMiddleware.authUser, userController.verifyOtp)
+
 module.exports = router;
