@@ -2,6 +2,7 @@ const captainModel = require("../modals/captain.modal");
 const captainService = require("../services/captain.services");
 const { validationResult } = require("express-validator");
 const blackListTokens = require("../modals/blacklisted");
+const { verifyOtp: verifyOtpService } = require("../utils/VerifyOtp");
 const sendOTPEmail = require("../services/otp.services").sendOTPEmail;
 
 module.exports.registerCaptain = async (req, res) => {
@@ -34,7 +35,7 @@ module.exports.registerCaptain = async (req, res) => {
         delete newCaptain.__v; // Remove __v from the response
 
         sendOTPEmail(email, newCaptain); // Send OTP email to the captain
- 
+
         res.status(201).json({
             token,
             captain: newCaptain
@@ -86,4 +87,19 @@ module.exports.logoutCaptain = async (req, res) => {
     await blackListTokens.create({ token: token }); // Add the token to the blacklist
     res.clearCookie('token');
     res.status(200).json({ message: "Logged out successfully" });
+}
+
+module.exports.verifyOtp = async (req, res, next) => {
+    try {
+        const captain = req.captain;
+
+        const { otp } = req.body;
+
+        await verifyOtpService(captain, otp);
+
+        res.status(200).json({ message: "OTP verified successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }

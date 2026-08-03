@@ -3,6 +3,7 @@ const router = express.Router();
 const captainController = require("../controllers/captain.controller");
 const authCaptainMiddleware = require("../middleware/authCaptain.middleware");
 const { body } = require("express-validator");
+const authMiddleware = require("../middleware/authUser.middleware");
 
 router.post("/register", [
     body("fullname.firstname").isLength({ min: 3 }).withMessage("First name must be at least 3 characters long"),
@@ -22,5 +23,9 @@ router.post("/login", [
 
 router.get("/profile", authCaptainMiddleware.authCaptain, captainController.getCaptainProfile);
 router.get("/logout", authCaptainMiddleware.authCaptain, captainController.logoutCaptain);
+
+router.post('/verify-otp', [
+    body('otp').isLength({ min: 6 }).withMessage('Invalid Otp')
+], authCaptainMiddleware.authCaptain, captainController.verifyOtp)
 
 module.exports = router;

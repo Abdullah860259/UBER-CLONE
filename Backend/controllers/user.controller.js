@@ -3,7 +3,7 @@ const { validationResult } = require('express-validator')
 const userService = require('../services/user.services')
 const blackListTokenModal = require('../modals/blacklisted')
 const sendOTPEmail = require('../services/otp.services').sendOTPEmail;
-const verifyOtp = require('../utils/VerifyEmail').verifyOtp;
+const { verifyOtp: verifyOtpService } = require('../utils/VerifyOtp');
 
 module.exports.registerUser = (async (req, res, next) => {
     try {
@@ -79,16 +79,23 @@ module.exports.profile = async (req, res, next) => {
 
 module.exports.logoutUser = async (req, res, next) => {
     const token = req.cookies.token || req.headers.authorization.split(' ')[1];
+    if (!token) {
+        return res.status(400).json({ message: "Unauthorized" });
+    }
     const blacklistedToken = await blackListTokenModal.create({ token: token });
     res.status(200).json({ message: "logout successfully" });
 }
 
 module.exports.verifyOtp = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+    }
     try {
         const user = req.user;
-        const { otp } = req.params;
+        const { otp } = req.body;
 
-        await verifyOtp(user, otp);
+        await verifyOtpService(user, otp);
 
         res.status(200).json({ message: "OTP verified successfully" });
     } catch (error) {

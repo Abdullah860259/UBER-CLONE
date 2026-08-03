@@ -2,6 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const userController = require('../controllers/user.controller')
 const router = express.Router();
+exports.router = router;
 const authMiddleware = require('../middleware/authUser.middleware');
 
 router.post('/register', [
@@ -17,8 +18,8 @@ router.post('/login', [
 router.get('/profile', authMiddleware.authUser, userController.profile)
 router.get('/logout', authMiddleware.authUser, userController.logoutUser)
 
-router.get('/verify-otp/:otp', [
-    body('otp').isLength({ min: 6 }).withMessage("Invalid OTP")
+router.post('/verify-otp', [
+    body('otp').isLength({ min: 6 }).withMessage('Invalid Otp')
 ], authMiddleware.authUser, userController.verifyOtp)
 
 module.exports = router;

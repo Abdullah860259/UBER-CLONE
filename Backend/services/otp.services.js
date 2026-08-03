@@ -20,10 +20,10 @@ module.exports.sendOTPEmail = async (email, user) => {
     user.expiry = expiry;
     user.isVerified = false;
 
-    await user.save();
-
     delete user.otp; // Remove OTP from the response
     delete user.expiry; // Remove expiry from the response
+    
+    await user.save();
     
     if (!result) {
         throw new Error("Failed to send OTP email");
