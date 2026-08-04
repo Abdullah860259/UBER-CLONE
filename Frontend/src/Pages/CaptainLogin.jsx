@@ -31,6 +31,7 @@ const CaptainLogin = () => {
                 dispatch(setUser({
                     user: res.data.user,
                     token: res.data.token,
+                    role: 'captain',
                     isLoggedIn: true
                 }))
                 navigate("/dashboard");

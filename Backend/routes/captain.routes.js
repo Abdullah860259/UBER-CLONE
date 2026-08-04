@@ -28,4 +28,7 @@ router.post('/verify-otp', [
     body('otp').isLength({ min: 6 }).withMessage('Invalid Otp')
 ], authCaptainMiddleware.authCaptain, captainController.verifyOtp)
 
+router.get('/authenticate', authCaptainMiddleware.authCaptain, (req, res) => {
+    res.status(200).json({ message: "User is authenticated", user: req.captain });
+})
 module.exports = router;

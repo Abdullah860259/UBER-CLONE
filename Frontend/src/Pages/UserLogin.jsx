@@ -28,6 +28,7 @@ const UserLogin = () => {
         });
         dispatch(setUser({
           user: res.data.user,
+          role:'user',
           token: res.data.token,
           isLoggedIn: true
         }));

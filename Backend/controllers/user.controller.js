@@ -90,6 +90,8 @@ module.exports.logoutUser = async (req, res, next) => {
         return res.status(400).json({ message: "Unauthorized" });
     }
     const blacklistedToken = await blackListTokenModal.create({ token: token });
+    res.clearCookie('token');
+
     res.status(200).json({ message: "logout successfully" });
 }
 

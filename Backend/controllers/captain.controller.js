@@ -66,7 +66,10 @@ module.exports.loginCaptain = async (req, res) => {
 
     const token = await captain.generateAuthToken();
 
-    res.cookie('token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // Set cookie for 24 hours
+    res.cookie('token', token, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000
+    }); // Set cookie for 24 hours
 
     res.status(200).json({
         token,
