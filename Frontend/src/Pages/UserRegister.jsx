@@ -41,7 +41,8 @@ const UserRegister = () => {
                 dispatch(setUser({
                     user: res.data.user,
                     token: res.data.token,
-                    isLoggedIn: true
+                    role: 'user',
+                    isLoggedIn: false
                 }));
             })
             .catch((err) => {

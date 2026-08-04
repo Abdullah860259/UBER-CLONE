@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { useNavigate, useParams } from 'react-router-dom'
 import API from '../utils/API'
-import { updateUser } from '../redux/user/user'
+import { updateLoginStatus } from '../redux/user/user'
 import { useDispatch } from 'react-redux'
 
 const OtpVerification = () => {
@@ -20,9 +20,11 @@ const OtpVerification = () => {
         }
         console.log('api is runing')
         API.post(`${import.meta.env.VITE_BASE_URL}/${role}/verify-otp`, { otp })
-            .then(() => {
+            .then((res) => {
                 navigate('/dashboard');
-                dispatch(updateUser({ isLoggedIn: true }));
+                dispatch(updateLoginStatus({ isLoggedIn: true }));
+                console.log(res)
+                toast.success(res.data.message)
             })
             .catch((e) => { console.error(e) })
     }

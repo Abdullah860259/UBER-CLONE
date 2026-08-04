@@ -18,7 +18,7 @@ const App = () => {
       <Route path="/captain-login" element={<PubicRoute><CaptainLogin /></PubicRoute>} />
       <Route path="/captain-register" element={<PubicRoute><CaptainRegister /></PubicRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
-      <Route path="/otp-verification/:role" element={<OtpVerification />} />
+      <Route path="/otp-verification/:role" element={<PubicRoute><OtpVerification /></PubicRoute>} />
     </Routes>
   )
 }

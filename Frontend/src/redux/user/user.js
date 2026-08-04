@@ -4,7 +4,6 @@ import axios from "axios";
 export const authenticateUser = createAsyncThunk(
     "user/authenticateUser",
     async ({ token, role }, { rejectWithValue }) => {
-        console.log('Authenticate User from redux create async thunk is runned');
         if (!token) {
             return rejectWithValue("Unauthorized: No token provided");
         }
@@ -44,6 +43,9 @@ export const counterSlice = createSlice({
         updateUser: (state, action) => {
             state.user = { ...state.user, ...action.payload };
         },
+        updateLoginStatus: (state, action) => {
+            state.isLoggedIn = action.payload.isLoggedIn
+        },
         logoutUser: (state) => {
             state.user = null;
             state.token = null;
@@ -71,6 +73,6 @@ export const counterSlice = createSlice({
     }
 });
 
-export const { setUser, updateUser, logoutUser } = counterSlice.actions;
+export const { setUser, updateUser, logoutUser, updateLoginStatus } = counterSlice.actions;
 
 export default counterSlice.reducer;
