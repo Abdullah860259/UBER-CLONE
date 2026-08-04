@@ -31,13 +31,20 @@ module.exports.registerUser = (async (req, res, next) => {
             password: hashedPassword
         })
 
+
         const token = user.generateAuthToken();
-        delete user.password; // Remove password from the response
-        delete user.__v; // Remove __v from the response
 
         sendOTPEmail(email, user); // Send OTP email to the user
 
-        res.status(201).json({ token, user })
+        const { otp, expiry, __v, ...safeUser } = user.toObject();
+        delete safeUser.password;
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            maxAge: 3600000
+        })
+
+        res.status(201).json({ token, user: safeUser })
 
     } catch (error) {
         console.error(error);

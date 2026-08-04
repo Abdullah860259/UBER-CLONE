@@ -34,7 +34,7 @@ const CaptainRegister = () => {
         axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, input)
             .then((res) => {
                 toast.success("Captain created successfully");
-                navigate(`/otp-verification/${res.data.user._id}`);
+                navigate(`/otp-verification/captains`);
                 setInput({
                     fullname: {
                         "firstname": "",
@@ -52,7 +52,7 @@ const CaptainRegister = () => {
                 dispatch(setUser({
                     user: res.data.user,
                     token: res.data.token,
-                    isLoggedIn: true
+                    isLoggedIn: false
                 }))
             })
             .catch((err) => {

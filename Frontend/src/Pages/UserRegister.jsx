@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
-import axios from "axios"
 import { toast } from "sonner"
 import { useDispatch } from "react-redux"
 import { setUser } from "../redux/user/user"
+import axios from "axios"
 
 const UserRegister = () => {
     const navigate = useNavigate();
@@ -29,7 +29,7 @@ const UserRegister = () => {
         axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, input)
             .then((res) => {
                 toast.success("User registered successfully");
-                navigate(`/otp-verification/${res.data.user._id}`);
+                navigate(`/otp-verification/users`);
                 setInput({
                     fullname: {
                         "firstname": "",
@@ -43,7 +43,6 @@ const UserRegister = () => {
                     token: res.data.token,
                     isLoggedIn: true
                 }));
-                
             })
             .catch((err) => {
                 toast.error(

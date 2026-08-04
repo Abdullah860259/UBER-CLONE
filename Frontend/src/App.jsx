@@ -16,7 +16,7 @@ const App = () => {
       <Route path="/captain-login" element={<CaptainLogin />} />
       <Route path="/captain-register" element={<CaptainRegister />} />
       <Route path="/dashboard" element={<DashBoard />} />
-      <Route path="/otp-verification/:otp" element={<OtpVerification />} />
+      <Route path="/otp-verification/:role" element={<OtpVerification />} />
     </Routes>
   )
 }

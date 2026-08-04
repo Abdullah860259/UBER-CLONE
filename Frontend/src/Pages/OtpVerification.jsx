@@ -1,11 +1,15 @@
-import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { useNavigate, useParams } from 'react-router-dom'
+import API from '../utils/API'
+import { updateUser } from '../redux/user/user'
+import { useDispatch } from 'react-redux'
 
 const OtpVerification = () => {
-    const { userId } = useParams();
-    console.log(userId);
     const [otp, setOtp] = useState("");
+    const { role } = useParams();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -14,8 +18,13 @@ const OtpVerification = () => {
             toast.error("OTP must be 6 digits");
             return;
         }
-
-        console.log("OTP:", otp);
+        console.log('api is runing')
+        API.post(`${import.meta.env.VITE_BASE_URL}/${role}/verify-otp`, { otp })
+            .then(() => {
+                navigate('/dashboard');
+                dispatch(updateUser({ isLoggedIn: true }));
+            })
+            .catch((e) => { console.error(e) })
     }
 
     return (
