@@ -1,28 +1,23 @@
 const maps = require("../services/maps.services");
 
-const vehicleTypes = ["moto", "auto", "car"];
-
-module.exports.calculateFare = async (origin, destination, vehicleType) => {
-  if (!origin || !destination || !vehicleType)
+module.exports.calculateFare = async (origin, destination) => {
+  if (!origin || !destination)
     throw new Error("all fields are required");
-
-  if (!vehicleTypes.includes(vehicleType))
-    throw new Error("invalid Vehicle Type");
 
   const originCoordinates = await maps.getAddressCoordinates(origin);
   if (!originCoordinates) throw new Error("Failed to find co ordiantes");
 
   const destinationCoordinates = await maps.getAddressCoordinates(destination);
   if (!destinationCoordinates) throw new Error("Failed to find co ordiantes");
-  console.log(originCoordinates, destinationCoordinates);
+
   const { distance, duration } = await maps.getDistanceTime(
-    originCoordinates,
-    destinationCoordinates,
+    origin,
+    destination,
   );
-  console.log(distance, duration);
+
   if (!distance || !duration)
     throw new Error("failed to fetch distance or time");
-
+  
   const baseFare = 10;
   const pricePerKm = {
     moto: 8,
@@ -34,12 +29,18 @@ module.exports.calculateFare = async (origin, destination, vehicleType) => {
     auto: 7,
     car: 11,
   };
-  const fare =
-    distance * pricePerKm[vehicleType] +
-    duration * pricePerMinute[vehicleType] +
-    baseFare;
-    
-  return Math.round(Math.trunc(fare) / 10) * 10;
-};
+  const carFare =
+    (distance * pricePerKm.car) + (duration * pricePerMinute.car) + baseFare;
+  const autoFare =
+    distance * pricePerKm.auto + duration * pricePerMinute.auto + baseFare;
+  const motoFare =
+    distance * pricePerKm.moto + duration * pricePerMinute.moto + baseFare;
 
-module.exports.calculateFare("sargodha", "karachi", "car");
+    
+
+  return {
+    car: Math.round(Math.trunc(carFare) / 10) * 10,
+    auto: Math.round(Math.trunc(autoFare) / 10) * 10,
+    moto: Math.round(Math.trunc(motoFare) / 10) * 10
+  };
+};

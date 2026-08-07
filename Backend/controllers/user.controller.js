@@ -76,7 +76,10 @@ module.exports.loginUser = async (req, res, next) => {
         maxAge: 3600000
     })
 
-    res.status(200).json({ token, user });
+    let userObj = user.toObject();
+    delete userObj.password
+
+    res.status(200).json({ token, userObj });
 }
 
 module.exports.profile = async (req, res, next) => {

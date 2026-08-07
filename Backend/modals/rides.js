@@ -1,5 +1,16 @@
 const mongoose = require("mongoose");
 
+const addressSchema = new mongoose.Schema({
+  lat: {
+    type: Number,
+    required: true,
+  },
+  lng: {
+    type: Number,
+    required: true,
+  },
+});
+
 const rideSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -11,11 +22,11 @@ const rideSchema = new mongoose.Schema({
     ref: "Captain",
   },
   origin: {
-    type: String,
+    type: addressSchema,
     require: true,
   },
   destination: {
-    type: String,
+    type: addressSchema,
     required: true,
   },
   distance: {
@@ -29,7 +40,6 @@ const rideSchema = new mongoose.Schema({
   vehicle: {
     type: String,
     enum: ["car", "bike", "truck"],
-    required: true,
   },
   duration: {
     type: Number,
@@ -38,7 +48,18 @@ const rideSchema = new mongoose.Schema({
     type: Number,
   }, // in meters
   fare: {
-    type: Number,
+    car: {
+      type: Number,
+      required: true,
+    },
+    auto: {
+      type: Number,
+      required: true,
+    },
+    moto: {
+      type: Number,
+      required: true,
+    },
   },
   paymentId: {
     type: String,
