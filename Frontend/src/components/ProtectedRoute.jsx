@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }) => {
   const dispatch = useDispatch();
   if (isLoggedIn === null) {
     dispatch(authenticateUser({ token, role }))
-    return <Loading status="Checking authentication..." />
+    return <Loading message="Checking authentication..." />
   }
   if (!isLoggedIn) {
     return <Navigate to={'/user-login'} />

@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')).render(
         closeButton
       />
       <Provider store={store}>
-        <PersistGate loading={<Loading status={'Fetching Data'} />} persistor={persistor} >
+        <PersistGate loading={<Loading message={'Fetching Data'} />} persistor={persistor} >
           <App />
         </PersistGate>
       </Provider>
