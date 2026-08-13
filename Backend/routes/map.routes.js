@@ -16,9 +16,14 @@ router.get(
 router.post(
   "/get-distance-time",
   [
-    body("origin").custom((value) => validateStringOrObject(value)),
-    body("destination").custom((value) => validateStringOrObject(value)),
-  ],
+  body("origin").isObject(),
+  body("origin.lat").isFloat({ min: -90, max: 90 }),
+  body("origin.lng").isFloat({ min: -180, max: 180 }),
+
+  body("destination").isObject(),
+  body("destination.lat").isFloat({ min: -90, max: 90 }),
+  body("destination.lng").isFloat({ min: -180, max: 180 }),
+],
   authUserMiddleware.authUser,
   mapsController.getDistanceTime,
 );

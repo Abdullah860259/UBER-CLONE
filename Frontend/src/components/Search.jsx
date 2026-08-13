@@ -1,11 +1,14 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { IoIosClose } from "react-icons/io";
 import Locations from "./Locations";
 import withDebounce from "../utils/debounce";
 import API from "../utils/API";
 import Loading from "../components/Loading";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import getRideData from "../utils/getRideData";
+import { useDispatch, useSelector } from "react-redux";
+import { updateRide } from "../redux/ride/ride";
+import BtnLoading from "../components/BtnLoading";
 
 const Search = ({ showPannel, setShowPannel, setShowRides }) => {
   const [form, setForm] = useState({
@@ -20,8 +23,11 @@ const Search = ({ showPannel, setShowPannel, setShowRides }) => {
     return storedItems?.slice(storedItems.length - 5).reverse() || null;
   });
   const [loading, setLoading] = useState(false);
+  const [butLoading, setButLoading] = useState(false);
   const [error, setError] = useState(false);
   const [focusedElement, setFocusedElement] = useState(null);
+  const ride = useSelector((state) => state.ride);
+  const dispatch = useDispatch();
 
   const fetchSuggestions = async (value) => {
     if (value.length < 3) {
@@ -47,7 +53,7 @@ const Search = ({ showPannel, setShowPannel, setShowRides }) => {
     }
   };
 
-  const fetchSuggestionsDe = withDebounce(fetchSuggestions, 500);
+  const fetchSuggestionsDe = useCallback(withDebounce(fetchSuggestions, 500));
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -108,15 +114,30 @@ const Search = ({ showPannel, setShowPannel, setShowRides }) => {
           />
         </div>
         <button
-          className="bg-black rounded-md text-white min-w-[200px] p-2 w-full mx-auto "
-          onClick={(e) => {
+          className={`bg-black rounded-md ${butLoading ? "opacity-50" : "opacity-100"} text-white flex justify-center items-center gap-4 min-w-[200px] p-2 w-full mx-auto  `}
+          disabled={butLoading}
+          onClick={async (e) => {
+            setButLoading(true);
             e.stopPropagation();
-            setShowPannel(false);
-            setShowRides(true);
+            try {
+              const res = await getRideData(ride.from, ride.to);
+              console.log(res, "res");
+              dispatch(
+                updateRide({
+                  distance: res.data.distance,
+                  duration: res.data.duration,
+                }),
+              );
+              setShowPannel(false);
+              setShowRides(true);
+            } catch (error) {
+              console.log(error);
+            }
+            setButLoading(false);
           }}
           ref={searchBut}
         >
-          Search
+          Search {butLoading ? <BtnLoading /> : ""}
         </button>
         {showPannel &&
           (error ? (
@@ -129,7 +150,6 @@ const Search = ({ showPannel, setShowPannel, setShowRides }) => {
               setForm={setForm}
               from={from}
               to={to}
-              searchBut={searchBut}
               focusedElement={focusedElement}
               suggestions={suggestions}
             />

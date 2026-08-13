@@ -28,7 +28,6 @@ const getAddressCoordinates = async (address) => {
 module.exports.getAddressCoordinates = getAddressCoordinates;
 
 module.exports.getDistanceTime = async (origin, destination) => {
-
     if (!origin.lng || !origin.lat) {
         const coordinates = await getAddressCoordinates(origin);
         origin.lng = coordinates.lng;
@@ -40,7 +39,6 @@ module.exports.getDistanceTime = async (origin, destination) => {
         destination.lng = coordinates.lng;
         destination.lat = coordinates.lat;
     }
-    
     try {
         const url = `https://router.project-osrm.org/route/v1/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?overview=false`;
 

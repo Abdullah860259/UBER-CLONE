@@ -5,6 +5,7 @@ const initialState = {
   to: null,
   isAccepted: false,
   duration: null,
+  vehicle:null,
   distance: null,
   fare: null,
   captain: null,
@@ -17,8 +18,11 @@ export const rideSlice = createSlice({
     updateRide: (state, action) => {
       Object.assign(state, action.payload);
     },
+    setVehicle:(state, action)=>{
+      state.vehicle = action.payload.vehicle;
+    }
   },
 });
 
-export const { updateRide } = rideSlice.actions;
+export const { updateRide , setVehicle} = rideSlice.actions;
 export default rideSlice.reducer;

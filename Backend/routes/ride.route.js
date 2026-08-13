@@ -17,4 +17,14 @@ router.post(
   rideController.createRide,
 );
 
+router.post(
+  "/calculateFare",
+  authMiddleware.authUser,
+  [
+    body("origin").notEmpty().withMessage("origin is required"),
+    body("destination").notEmpty().withMessage("destination is required"),
+  ],
+  rideController.calculateFare,
+);
+
 module.exports = router;

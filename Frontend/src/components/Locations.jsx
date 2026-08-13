@@ -27,9 +27,6 @@ const Locations = ({
             if (focusedElement === "from") {
               to.current.focus();
             }
-            if (focusedElement === "to") {
-              searchBut.current.click();
-            }
             setForm({
               ...form,
               [focusedElement || "from"]:
