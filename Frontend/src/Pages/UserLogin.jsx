@@ -10,7 +10,7 @@ const UserLogin = () => {
   const navigate = useNavigate();
   const [input, setInput] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const handleSubmit = (e) => {
@@ -19,26 +19,31 @@ const UserLogin = () => {
       toast.error("Please fill in all fields");
       return;
     }
-    axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, input)
+    axios
+      .post(`${import.meta.env.VITE_BASE_URL}/users/login`, input, {
+        withCredentials: true,
+      })
       .then((res) => {
         toast.success("User logged in successfully");
         setInput({
           email: "",
-          password: ""
+          password: "",
         });
-        dispatch(setUser({
-          user: res.data.user,
-          role:'user',
-          token: res.data.token,
-          isLoggedIn: true
-        }));
+        dispatch(
+          setUser({
+            user: res.data.userObj,
+            role: "user",
+            token: res.data.token,
+            isLoggedIn: true,
+          }),
+        );
         navigate("/dashboard");
       })
       .catch((err) => {
         toast.error(
           err.response.data?.message ||
-          err.response?.data?.errors?.[0]?.msg ||
-          "User login failed, please try again later."
+            err.response?.data?.errors?.[0]?.msg ||
+            "User login failed, please try again later.",
         );
       });
   };
@@ -51,11 +56,9 @@ const UserLogin = () => {
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Uber_logo_2018.svg/960px-Uber_logo_2018.svg.png"
           alt="logo"
         />
-        <form
-          onSubmit={(e) => handleSubmit(e)}
-        >
+        <form onSubmit={(e) => handleSubmit(e)}>
           <div className="flex flex-col gap-4">
-            <h3 className="text-2xl font-semibold " >What's your email?</h3>
+            <h3 className="text-2xl font-semibold ">What's your email?</h3>
             <input
               type="email"
               placeholder="uber@example.com"
@@ -63,7 +66,7 @@ const UserLogin = () => {
               onChange={(e) => setInput({ ...input, email: e.target.value })}
               className="border border-gray-300 rounded-lg py-4 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <h3 className="text-2xl font-semibold " >Password</h3>
+            <h3 className="text-2xl font-semibold ">Password</h3>
             <input
               type="password"
               placeholder="Password"
@@ -78,7 +81,16 @@ const UserLogin = () => {
               Login
             </button>
           </div>
-          <div className="w-full text-center text-lg font-semibold " >New here?<Link to="/user-register" className="text-blue-500 font-semibold hover:underline cursor-pointer">  Create new Account</Link></div>
+          <div className="w-full text-center text-lg font-semibold ">
+            New here?
+            <Link
+              to="/user-register"
+              className="text-blue-500 font-semibold hover:underline cursor-pointer"
+            >
+              {" "}
+              Create new Account
+            </Link>
+          </div>
         </form>
       </div>
       <Link
@@ -88,7 +100,7 @@ const UserLogin = () => {
         Login As Captain
       </Link>
     </div>
-  )
-}
+  );
+};
 
-export default UserLogin
+export default UserLogin;

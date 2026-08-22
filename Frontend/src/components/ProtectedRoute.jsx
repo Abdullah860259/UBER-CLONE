@@ -1,20 +1,20 @@
-import Loading from "./Loading"
-import { useSelector, useDispatch } from "react-redux"
-import { Navigate } from "react-router-dom"
-import { authenticateUser } from "../redux/user/user"
+import Loading from "./Loading";
+import { useSelector, useDispatch } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { authenticateUser } from "../redux/user/user";
 
 const ProtectedRoute = ({ children }) => {
   const { isLoggedIn, token, role } = useSelector((state) => state.user);
-  
+
   const dispatch = useDispatch();
   if (isLoggedIn === null) {
-    dispatch(authenticateUser({ token, role }))
-    return <Loading message="Checking authentication..." />
+    dispatch(authenticateUser({ token, role }));
+    return <Loading message="Checking authentication..." />;
   }
   if (!isLoggedIn) {
-    return <Navigate to={'/user-login'} />
+    return <Navigate to={"/user-login"} />;
   }
-  return <>{children}</>
-}
+  return <>{children}</>;
+};
 
-export default ProtectedRoute
+export default ProtectedRoute;

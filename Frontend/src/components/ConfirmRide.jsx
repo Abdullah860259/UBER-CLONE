@@ -18,7 +18,10 @@ const RidesDescription = ({ showConfirmRide, setShowConfirmRide }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [setShowConfirmRide]);
-
+  
+  if (!ride.to || !ride.from || !ride.fare) {
+    return null;
+  }
   return (
     <div
       className={`absolute ${showConfirmRide ? "" : "translate-y-full"} rides-container transition-transform duration-500 ease-in-out bottom-0 w-full max-h-[65vh] bg-white flex flex-col pt-3 p-3 rounded-t-lg `}
@@ -34,17 +37,17 @@ const RidesDescription = ({ showConfirmRide, setShowConfirmRide }) => {
         <img
           className="object-contain w-full h-40"
           src={ridesImages[ride.vehicle]}
-          alt={ride.vehicle}
+          alt={ride?.vehicle}
         />
         <div className="w-full  h-[2px] bg-gray-300"></div>
         <div className="flex items-center justify-between">
           <IoLocationSharp className="min-w-[40px]" size={20} />
           <div className="flex w-full py-3 flex-col gap-0 border-b-2 border-gray-300">
             <h3 className="font-bold flex items-center gap-2">
-              {ride.from.name}
+              {ride?.from?.name}
             </h3>
             <p className="text-xs font-semibold text-zinc-600">
-              {ride.from.city || ride.from.country}
+              {ride?.from?.city || ride?.from?.country}
             </p>
           </div>
         </div>
@@ -52,10 +55,10 @@ const RidesDescription = ({ showConfirmRide, setShowConfirmRide }) => {
           <FaSquare className="min-w-[40px]" size={10} />
           <div className="flex w-full py-3 flex-col gap-0 border-b-2 border-gray-300">
             <h3 className="font-bold flex items-center gap-2">
-              {ride.to.name}
+              {ride?.to?.name}
             </h3>
             <p className="text-xs font-semibold text-zinc-600">
-              {ride.to.city || ride.to.country}
+              {ride?.to?.city || ride?.to?.country}
             </p>
           </div>
         </div>
@@ -63,7 +66,7 @@ const RidesDescription = ({ showConfirmRide, setShowConfirmRide }) => {
           <IoCard className="min-w-[40px]" size={20} />
           <div className="flex w-full py-3 flex-col gap-0 border-b-2 border-gray-300">
             <h3 className="font-bold flex items-center gap-2">
-              Rs {ride.fare[ride.vehicle]}
+              Rs {ride?.fare[ride?.vehicle]}
             </h3>
             {/* <p className="text-xs font-semibold text-zinc-600">
               Lorem ipsum dolor sit amet.
