@@ -1,29 +1,27 @@
-const jwt = require('jsonwebtoken');
-const userModal = require('../modals/user.modal');
-const blackListTokenModal = require('../modals/blacklisted')
+const jwt = require("jsonwebtoken");
+const userModal = require("../modals/user.modal");
+const blackListTokenModal = require("../modals/blacklisted");
 
 module.exports.authUser = async (req, res, next) => {
-    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
-    console.log('token is',token);
-    if (!token) {
-        return res.status(401).send('unauthorized');
-    }
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).send("unauthorized");
+  }
 
-    const isBlacklisted = await blackListTokenModal.findOne({ token });
-    if (isBlacklisted) {
-        return res.status(401).send('unauthorized');
-    }
+  const isBlacklisted = await blackListTokenModal.findOne({ token });
+  if (isBlacklisted) {
+    return res.status(401).send("unauthorized");
+  }
 
+  try {
+    console.log("recieving token", token);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await userModal.findById(decoded._id);
+    req.user = user;
 
-    try {
-        console.log('recieving token',token);
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await userModal.findById(decoded._id);
-        req.user = user;
-
-        return next();
-    } catch (error) {
-        console.log(error);
-        return res.status(401).send('unauthorized');
-    }
-}
+    return next();
+  } catch (error) {
+    console.log(error);
+    return res.status(401).send("unauthorized");
+  }
+};
