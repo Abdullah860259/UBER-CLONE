@@ -4,6 +4,7 @@ import { FaSquare } from "react-icons/fa";
 import { IoCard } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { ridesImages } from "../utils/Constants";
+import { CreateRide } from "../utils/CreateRides";
 
 const RidesDescription = ({
   setShowRidesDescription,
@@ -11,7 +12,7 @@ const RidesDescription = ({
   setShowConfirmRide,
 }) => {
   const ride = useSelector((state) => state.ride);
-  //   const [Loading, setLoading] = useState(false);
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(".rides-container")) {
@@ -82,6 +83,7 @@ const RidesDescription = ({
         <button
           className="bg-blue-500 w-full mt-2 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-300"
           onClick={() => {
+            CreateRide(ride);
             setShowRidesDescription(false);
             setShowConfirmRide(true);
           }}

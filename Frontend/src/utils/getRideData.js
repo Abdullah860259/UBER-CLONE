@@ -12,10 +12,16 @@ const getRideData = async (fromCo, toCo) => {
 
   try {
     const res = await API.post("/maps/get-distance-time", data);
+    console.log(res.data,'res from ride data');
+    if (res?.data.duration === "infinite" || res?.data.distance === "infinite") {
+      toast.error('This distance is not reachable')
+      throw new Error("This distance is not reachable");
+    }
     return res;
   } catch (error) {
     console.error(error);
-    toast.error("something went wrong in fetching ride data");
+    console.log(error);
+    toast.error( "something went wrong in fetching ride data");
   }
 };
 

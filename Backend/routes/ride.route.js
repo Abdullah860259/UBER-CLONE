@@ -10,9 +10,7 @@ router.post(
   authMiddleware.authUser,
   [
     body("originCoordinates").notEmpty().withMessage("origin is required"),
-    body("destinationCoordinates")
-      .notEmpty()
-      .withMessage("destination is required"),
+    body("destinationCoordinates").notEmpty().withMessage("destination is required"),
   ],
   rideController.createRide,
 );

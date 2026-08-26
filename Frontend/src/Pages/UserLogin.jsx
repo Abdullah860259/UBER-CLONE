@@ -41,7 +41,7 @@ const UserLogin = () => {
       })
       .catch((err) => {
         toast.error(
-          err.response.data?.message ||
+          err.response?.data?.message ||
             err.response?.data?.errors?.[0]?.msg ||
             "User login failed, please try again later.",
         );

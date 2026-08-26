@@ -50,7 +50,7 @@ const CaptainRegister = () => {
                     }
                 });
                 dispatch(setUser({
-                    user: res.data.user,
+                    user: res.data.userObj,
                     token: res.data.token,
                     isLoggedIn: false
                 }))

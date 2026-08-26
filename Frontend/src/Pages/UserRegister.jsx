@@ -39,7 +39,7 @@ const UserRegister = () => {
                     password: ""
                 });
                 dispatch(setUser({
-                    user: res.data.user,
+                    user: res.data.userObj,
                     token: res.data.token,
                     role: 'user',
                     isLoggedIn: false
